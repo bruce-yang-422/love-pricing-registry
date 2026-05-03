@@ -432,6 +432,20 @@ button, input { font: inherit; }
   text-align: justify;
 }
 
+.reader-image {
+  margin: 0 0 24px;
+}
+
+.reader-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper-soft);
+  box-shadow: var(--shadow-sm);
+}
+
 .reader blockquote {
   margin: 24px 0;
   padding: 10px 18px 10px 16px;

@@ -1,6 +1,7 @@
 // LRPR · 戀愛實價登錄 · 閱讀器
 
 const chapters = [
+  { no: "00", title: "首頁：一切的開始", file: "書本首頁.md" },
   { no: "01", title: "估價：歡迎登入戀愛實價系統", file: "ch01-估價-歡迎登入戀愛實價系統.md" },
   { no: "02", title: "帶看：物件有瑕疵，需配合議價", file: "ch02-帶看-物件有瑕疵-需配合議價.md" },
   { no: "03", title: "斡旋：情緒管理費的通膨", file: "ch03-斡旋-情緒管理費的通膨.md" },
@@ -44,6 +45,22 @@ function inlineMarkdown(value) {
   return escapeHtml(value)
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/`(.+?)`/g, "<code>$1</code>");
+}
+
+function renderImage(line) {
+  const match = line.match(/^!\[([^\]]*)\]\((.+?)\)$/);
+  if (!match) return null;
+
+  const alt = match[1].trim();
+  const rawTarget = match[2].trim();
+  const titleMatch = rawTarget.match(/^(.+?)\s+"([^"]+)"$/);
+  const src = titleMatch ? titleMatch[1].trim() : rawTarget;
+  const title = titleMatch ? titleMatch[2].trim() : "";
+
+  if (!src || /^(javascript|data):/i.test(src)) return null;
+
+  const titleAttr = title ? ` title="${escapeHtml(title)}"` : "";
+  return `<figure class="reader-image"><img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}"${titleAttr} loading="lazy" decoding="async"></figure>`;
 }
 
 function parseTable(lines, start) {
@@ -102,6 +119,13 @@ function markdownToHtml(markdown) {
       const level = trimmed.match(/^#+/)[0].length;
       const heading = trimmed.replace(/^#{1,3}\s+/, "");
       html.push(`<h${level}>${formatHeading(level, heading)}</h${level}>`);
+      continue;
+    }
+
+    const image = renderImage(trimmed);
+    if (image) {
+      flushParagraph();
+      html.push(image);
       continue;
     }
 
@@ -281,6 +305,4 @@ applySettings();
 renderToc();
 
 const hashIndex = chapters.findIndex(ch => ch.no === location.hash.replace("#", ""));
-const savedIndex = Number(localStorage.getItem("reader-current"));
-const initialIndex = Number.isInteger(savedIndex) && savedIndex >= 0 && savedIndex < chapters.length ? savedIndex : 0;
-loadChapter(hashIndex >= 0 ? hashIndex : initialIndex, false);
+loadChapter(hashIndex >= 0 ? hashIndex : 0, false);
