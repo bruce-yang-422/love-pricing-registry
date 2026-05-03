@@ -2,6 +2,10 @@
 
 《戀愛實價登錄》是一部台灣都市諷刺小說。這個資料夾包含小說 Markdown 章節，以及一個可直接部署到 GitHub Pages 的單頁閱讀器。
 
+## 前端網址
+
+https://bruce-yang-422.github.io/love-pricing-registry/
+
 ## 線上閱讀器
 
 入口檔案是 `index.html`。
