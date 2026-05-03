@@ -236,8 +236,10 @@
     .reader h1 {
       margin: 0 0 32px;
       color: var(--accent);
-      font-size: clamp(30px, 6vw, 46px);
-      text-wrap: balance;
+      font-size: clamp(28px, 4.5vw, 38px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .reader h2 {
@@ -393,6 +395,10 @@
       .reader {
         padding: 24px 18px;
         border-radius: 8px;
+      }
+
+      .reader h1 {
+        font-size: clamp(22px, 7vw, 30px);
       }
 
       .reader-meta {
