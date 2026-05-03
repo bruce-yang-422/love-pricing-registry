@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>戀愛實價登錄</title>
-  <meta name="description" content="《戀愛實價登錄》線上閱讀器">
+  <meta name="description" content="《戀愛實價登錄》LRPR 婚戀行情公開系統">
   <style>
     :root {
       color-scheme: light;
@@ -91,6 +91,18 @@
       color: var(--muted);
       font-size: 14px;
       line-height: 1.6;
+    }
+
+    .market-note {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper-soft);
+      color: var(--accent-2);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+      line-height: 1.55;
     }
 
     .toolbar {
@@ -427,23 +439,24 @@
   <div class="mobile-topbar">
     <button class="menu-button" id="menuButton" type="button" aria-label="開啟目錄">☰</button>
     <div class="mobile-title" id="mobileTitle">戀愛實價登錄</div>
-    <button class="menu-button" id="themeMobileButton" type="button" aria-label="切換夜間模式">◐</button>
+    <button class="menu-button" id="themeMobileButton" type="button" aria-label="切換夜間看盤">◐</button>
   </div>
 
   <div class="app">
     <aside class="sidebar" id="sidebar">
       <div class="brand">
         <h1>戀愛實價登錄</h1>
-        <p>台灣都市諷刺小說閱讀器</p>
+        <p>LRPR 婚戀行情公開系統</p>
+        <div class="market-note">透明配對，幸福不炒作。</div>
       </div>
 
       <div class="toolbar" aria-label="閱讀設定">
-        <button class="tool-button" id="smallerButton" type="button" title="縮小字體">A-</button>
-        <button class="tool-button" id="largerButton" type="button" title="放大字體">A+</button>
-        <button class="tool-button" id="themeButton" type="button" title="切換夜間模式">◐</button>
+        <button class="tool-button" id="smallerButton" type="button" title="降低掛牌字級">A-</button>
+        <button class="tool-button" id="largerButton" type="button" title="提高掛牌字級">A+</button>
+        <button class="tool-button" id="themeButton" type="button" title="切換夜間看盤">◐</button>
       </div>
 
-      <input class="search" id="searchInput" type="search" placeholder="搜尋章節" aria-label="搜尋章節">
+      <input class="search" id="searchInput" type="search" placeholder="搜尋成交行情" aria-label="搜尋成交行情">
       <ol class="toc" id="toc"></ol>
     </aside>
 
@@ -454,11 +467,11 @@
           <span id="wordCount"></span>
         </div>
         <article class="reader" id="reader" tabindex="-1" aria-live="polite">
-          <p class="empty">正在載入小說...</p>
+          <p class="empty">正在調閱成交紀錄...</p>
         </article>
-        <nav class="bottom-nav" aria-label="章節導覽">
-          <button class="nav-button" id="prevButton" type="button">上一章</button>
-          <button class="nav-button" id="nextButton" type="button">下一章</button>
+        <nav class="bottom-nav" aria-label="行情導覽">
+          <button class="nav-button" id="prevButton" type="button">上一筆行情</button>
+          <button class="nav-button" id="nextButton" type="button">下一筆行情</button>
         </nav>
       </div>
     </main>
@@ -645,7 +658,7 @@
       state.current = Math.max(0, Math.min(chapters.length - 1, index));
       const chapter = chapters[state.current];
 
-      reader.innerHTML = '<p class="empty">正在載入章節...</p>';
+      reader.innerHTML = '<p class="empty">正在調閱本筆行情...</p>';
       currentChapter.textContent = `${chapter.no} ${chapter.title}`;
       mobileTitle.textContent = chapter.title;
       wordCount.textContent = "";
