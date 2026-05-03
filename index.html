@@ -237,8 +237,8 @@
       margin: 0 0 32px;
       color: var(--accent);
       font-size: clamp(28px, 4.5vw, 38px);
-      overflow: hidden;
-      text-overflow: ellipsis;
+      max-width: 100%;
+      overflow: visible;
       white-space: nowrap;
     }
 
@@ -631,6 +631,7 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const markdown = await response.text();
         reader.innerHTML = markdownToHtml(markdown);
+        fitChapterTitle();
         wordCount.textContent = `${markdown.replace(/\s/g, "").length.toLocaleString()} 字`;
         if (pushHash) history.replaceState(null, "", `#${chapter.no}`);
         localStorage.setItem("reader-current", String(state.current));
@@ -643,6 +644,20 @@
       prevButton.disabled = state.current === 0;
       nextButton.disabled = state.current === chapters.length - 1;
       sidebar.classList.remove("open");
+    }
+
+    function fitChapterTitle() {
+      const title = reader.querySelector("h1");
+      if (!title) return;
+
+      title.style.fontSize = "";
+      const maxSize = Number.parseFloat(getComputedStyle(title).fontSize);
+      let size = maxSize;
+
+      while (title.scrollWidth > title.clientWidth && size > 20) {
+        size -= 1;
+        title.style.fontSize = `${size}px`;
+      }
     }
 
     function applySettings() {
@@ -681,6 +696,7 @@
     prevButton.addEventListener("click", () => loadChapter(state.current - 1));
     nextButton.addEventListener("click", () => loadChapter(state.current + 1));
     window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", fitChapterTitle);
     window.addEventListener("hashchange", () => {
       const target = location.hash.replace("#", "");
       const index = chapters.findIndex(chapter => chapter.no === target);
