@@ -234,12 +234,27 @@
     }
 
     .reader h1 {
+      display: flex;
+      align-items: baseline;
+      gap: .35em;
       margin: 0 0 32px;
       color: var(--accent);
       font-size: clamp(28px, 4.5vw, 38px);
       max-width: 100%;
       overflow: visible;
       white-space: nowrap;
+    }
+
+    .reader h1 .chapter-mark {
+      flex: 0 0 auto;
+      font-size: .62em;
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    .reader h1 .chapter-name {
+      min-width: 0;
+      font-size: 1em;
     }
 
     .reader h2 {
@@ -550,7 +565,8 @@
         if (/^#{1,3}\s+/.test(trimmed)) {
           flushParagraph();
           const level = trimmed.match(/^#+/)[0].length;
-          html.push(`<h${level}>${inlineMarkdown(trimmed.replace(/^#{1,3}\s+/, ""))}</h${level}>`);
+          const heading = trimmed.replace(/^#{1,3}\s+/, "");
+          html.push(`<h${level}>${formatHeading(level, heading)}</h${level}>`);
           continue;
         }
 
@@ -595,6 +611,15 @@
 
       flushParagraph();
       return html.join("\n");
+    }
+
+    function formatHeading(level, heading) {
+      if (level !== 1) return inlineMarkdown(heading);
+
+      const match = heading.match(/^(第\s*\d+\s*章)(.*)$/);
+      if (!match) return inlineMarkdown(heading);
+
+      return `<span class="chapter-mark">${inlineMarkdown(match[1])}</span><span class="chapter-name">${inlineMarkdown(match[2].trim())}</span>`;
     }
 
     function renderToc(filter = "") {
